@@ -1,34 +1,24 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
-import progressRing from './assets/figma/progress-ring.svg'
+import { Art, Bottle, Bottle750, Glass250, Glass500 } from './water-art'
+import progressRing from './assets/figma/progress-ring.svg?raw'
 import settingsIcon from './assets/figma/settings.svg'
-import dropRays from './assets/figma/drop-rays.svg'
-import drop from './assets/figma/drop.svg'
+import dropRays from './assets/figma/drop-rays.svg?raw'
+import drop from './assets/figma/drop.svg?raw'
 import divider from './assets/figma/divider.svg'
-import progressBar from './assets/figma/progress-bar.svg'
+import progressBar from './assets/figma/progress-bar.svg?raw'
 import actionBg from './assets/figma/action-bg.svg'
-import glass500 from './assets/figma/glass-500.svg'
-import glass250 from './assets/figma/glass-250.svg'
-import bottle750 from './assets/figma/bottle-750.svg'
 import dots from './assets/figma/dots.svg'
 import lineTop from './assets/figma/grid-solid.svg'
 import lineMid from './assets/figma/grid-dash.svg'
-import bar1 from './assets/figma/bar-1.svg'
-import bar2 from './assets/figma/bar-2.svg'
-import bar3 from './assets/figma/bar-3.svg'
-import bar4 from './assets/figma/bar-4.svg'
-import bar5 from './assets/figma/bar-5.svg'
-import bar6 from './assets/figma/bar-6.svg'
-import bar7 from './assets/figma/bar-7.svg'
-import bannerDrop from './assets/figma/banner-drop.svg'
+import bannerDrop from './assets/figma/banner-drop.svg?raw'
 import chevron from './assets/figma/chevron.svg'
 import navBg from './assets/figma/nav-bg.svg'
-import navWater from './assets/figma/nav-water.svg'
+import navWater from './assets/figma/nav-water.svg?raw'
 import navStats from './assets/figma/nav-stats.svg'
 import navTrophy from './assets/figma/nav-trophy.svg'
 import navProfile from './assets/figma/nav-profile.svg'
-import bottle from './assets/figma/bottle.svg'
-import spark from './assets/figma/spark.svg'
+import spark from './assets/figma/spark.svg?raw'
 import statusIcons from './assets/figma/status-icons.svg'
 import minusCircle from './assets/figma/minus-circle.svg'
 import minusLine from './assets/figma/minus-line.svg'
@@ -39,14 +29,14 @@ type Sheet = 'custom' | 'goal' | null
 
 const STORAGE_KEY = 'water-tracker'
 
-const DAY_BARS = [
-  { src: bar1, width: 15.7162, height: 28, left: 49, top: 123, label: '8:00', labelLeft: 47 },
-  { src: bar2, width: 16, height: 18, left: 91.5, top: 133.5, label: '10:00', labelLeft: 86 },
-  { src: bar3, width: 16, height: 28, left: 133.5, top: 123.5, label: '12:00', labelLeft: 129 },
-  { src: bar4, width: 16, height: 40, left: 175.5, top: 111.5, label: '14:00', labelLeft: 171 },
-  { src: bar5, width: 15, height: 25, left: 218.5, top: 126.5, label: '16:00', labelLeft: 213 },
-  { src: bar6, width: 15.7162, height: 18, left: 260.3, top: 133, label: '18:00', labelLeft: 255 },
-  { src: bar7, width: 16, height: 9, left: 302.5, top: 142.5, label: '20:00', labelLeft: 298 },
+const DAY = [
+  { label: '8:00', ml: 560 },
+  { label: '10:00', ml: 360 },
+  { label: '12:00', ml: 560 },
+  { label: '14:00', ml: 800 },
+  { label: '16:00', ml: 500 },
+  { label: '18:00', ml: 360 },
+  { label: '20:00', ml: 180 },
 ]
 
 const WEEK = [
@@ -98,7 +88,7 @@ function loadTracker() {
 }
 
 function praiseFor(ratio: number) {
-  if (ratio >= 1) return { title: 'Готово!', text: 'Дневная цель выполнена' }
+  if (ratio >= 1) return { title: 'Готово!', text: '' }
   if (ratio >= 0.5) return { title: 'Отлично!', text: 'Вы на пути к цели!' }
   if (ratio > 0) return { title: 'Так держать', text: 'Каждый глоток на счету' }
   return { title: 'Начнём', text: 'Добавьте первый стакан' }
@@ -129,7 +119,7 @@ function StatusBar() {
   )
 }
 
-function Ring({ ratio }: { ratio: number }) {
+function Ring({ ratio, splash }: { ratio: number; splash: number }) {
   const designed = Math.abs(ratio - 0.5) < 0.001
   const radius = 112
   const length = 2 * Math.PI * radius
@@ -138,7 +128,7 @@ function Ring({ ratio }: { ratio: number }) {
   return (
     <div className="ring" aria-hidden="true">
       {designed ? (
-        <img className="ring-art" src={progressRing} width={242} height={242} alt="" />
+        <Art markup={progressRing} className="ring-art" />
       ) : (
         <svg className="ring-live" width={242} height={242} viewBox="0 0 242 242">
           <circle cx="121" cy="121" r={radius} fill="none" stroke="#E3F1FB" strokeWidth="18" />
@@ -154,22 +144,30 @@ function Ring({ ratio }: { ratio: number }) {
             transform="rotate(-90 121 121)"
           />
           <defs>
-            <linearGradient id="liveRing" x1="9" y1="233" x2="233" y2="9">
+            <linearGradient id="liveRing" x1="9" y1="233" x2="233" y2="9" gradientUnits="userSpaceOnUse">
               <stop stopColor="#128CF5" />
               <stop offset="0.55" stopColor="#42C5FF" />
               <stop offset="1" stopColor="#087DE2" />
+              <animateTransform
+                attributeName="gradientTransform"
+                type="rotate"
+                from="0 121 121"
+                to="360 121 121"
+                dur="9s"
+                repeatCount="indefinite"
+              />
             </linearGradient>
           </defs>
         </svg>
       )}
-      <img className="bottle" src={bottle} width={96.9263} height={154} alt="" />
+      <Bottle ratio={ratio} splash={splash} />
     </div>
   )
 }
 
 function MiniBar({ ratio }: { ratio: number }) {
   if (Math.abs(ratio - 0.5) < 0.001) {
-    return <img className="stats-bar" src={progressBar} width={101} height={8} alt="" />
+    return <Art markup={progressBar} className="stats-bar" />
   }
   return (
     <span className="mini-track stats-bar">
@@ -179,7 +177,8 @@ function MiniBar({ ratio }: { ratio: number }) {
 }
 
 function Chart({ period, goal, onPeriod }: { period: Period; goal: number; onPeriod: (period: Period) => void }) {
-  const series = period === 'week' ? WEEK : MONTH
+  const series = period === 'day' ? DAY : period === 'week' ? WEEK : MONTH
+  const scale = Math.max(goal, 1)
   return (
     <section className="chart" aria-label="Динамика потребления">
       <div className="chart-canvas">
@@ -209,40 +208,24 @@ function Chart({ period, goal, onPeriod }: { period: Period; goal: number; onPer
           Месяц
         </button>
         <p className="goal-pill">Цель: {grouped(goal)} мл</p>
-        <p className="y-label y-2000">2 000</p>
-        <p className="y-label y-1000">1 000</p>
+        <p className="y-label y-2000">{grouped(scale)}</p>
+        <p className="y-label y-1000">{grouped(scale / 2)}</p>
         <p className="y-label y-0">0</p>
         <img className="hline hline-top" src={lineTop} width={311.378} height={1} alt="" />
         <img className="hline hline-mid" src={lineMid} width={311.378} height={1} alt="" />
         <img className="hline hline-bot" src={lineMid} width={311.378} height={1} alt="" />
-        {period === 'day'
-          ? DAY_BARS.map((bar) => (
-              <span key={bar.label}>
-                <img
-                  className="bar"
-                  src={bar.src}
-                  width={bar.width}
-                  height={bar.height}
-                  alt=""
-                  style={{ left: bar.left, top: bar.top }}
-                />
-                <p className="x-label" style={{ left: bar.labelLeft, width: 26 }}>
-                  {bar.label}
-                </p>
-              </span>
-            ))
-          : series.map((item, index) => {
-              const height = Math.max(6, Math.round((item.ml / 2000) * 100))
-              const left = 49 + index * 42
-              return (
-                <span key={item.label}>
-                  <span className="live-bar" style={{ left, top: 151 - height, height }} />
-                  <p className="x-label" style={{ left: left - 6, width: 28 }}>
-                    {item.label}
-                  </p>
-                </span>
-              )
-            })}
+        {series.map((item, index) => {
+          const height = Math.max(6, Math.round((Math.min(item.ml, scale) / scale) * 100))
+          const left = 49 + index * 42
+          return (
+            <span key={item.label}>
+              <span className="live-bar" style={{ left, top: 151 - height, height }} />
+              <p className="x-label" style={{ left: left - 10, width: 36 }}>
+                {item.label}
+              </p>
+            </span>
+          )
+        })}
       </div>
     </section>
   )
@@ -252,6 +235,7 @@ function WaterScreen({
   intake,
   goal,
   period,
+  cheer,
   onPeriod,
   onAdd,
   onUndo,
@@ -260,6 +244,7 @@ function WaterScreen({
   intake: number
   goal: number
   period: Period
+  cheer: number
   onPeriod: (period: Period) => void
   onAdd: (amount: number) => void
   onUndo: () => void
@@ -270,29 +255,29 @@ function WaterScreen({
   const remaining = Math.max(0, goal - intake)
   const percent = Math.min(100, Math.round(ratio * 100))
   const actions = [
-    { amount: 250, icon: glass250, width: 22.3333, height: 32.9998, label: '+ 250 мл' },
-    { amount: 500, icon: glass500, width: 22.3333, height: 32.9998, label: '+ 500 мл' },
-    { amount: 750, icon: bottle750, width: 19.8804, height: 32.51, label: '+ 750 мл' },
+    { amount: 250, icon: <Glass250 />, label: '+ 250 мл' },
+    { amount: 500, icon: <Glass500 />, label: '+ 500 мл' },
+    { amount: 750, icon: <Bottle750 />, label: '+ 750 мл' },
   ]
 
   return (
     <>
       <h1 className="title">Вода</h1>
       <p className="subtitle">Забота о себе каждый день</p>
-      <Ring ratio={ratio} />
+      <Ring ratio={ratio} splash={cheer} />
       <p className="total">
         <span className="total-now">{grouped(intake)} / </span>
         <span className="total-goal">{grouped(goal)} мл</span>
       </p>
-      <article className="praise">
-        <img className="spark" src={spark} width={42.5006} height={17.5003} alt="" />
-        <img src={dropRays} width={20} height={32} alt="" />
+      <article key={cheer} className={cheer > 0 ? 'praise shake' : 'praise'}>
+        <Art markup={spark} className="spark" />
+        <Art markup={dropRays} />
         <p className="praise-title">{praise.title}</p>
-        <p className="praise-sub">{praise.text}</p>
+        {praise.text ? <p className="praise-sub">{praise.text}</p> : null}
       </article>
       <article className="stats">
         <div className="stats-grid">
-          <img className="stats-drop" src={drop} width={20} height={33} alt="" />
+          <Art markup={drop} className="stats-drop" />
           <p className="stats-label">Осталось</p>
           <p className="stats-left">{remaining} мл</p>
           <img className="stats-divider" src={divider} width={68} height={1} alt="" />
@@ -316,7 +301,7 @@ function WaterScreen({
           <button key={action.amount} type="button" className="action" onClick={() => onAdd(action.amount)}>
             <img src={actionBg} width={82} height={82} alt="" />
             <span className="action-face">
-              <img src={action.icon} width={action.width} height={action.height} alt="" />
+              {action.icon}
               <span>{action.label}</span>
             </span>
           </button>
@@ -332,7 +317,7 @@ function WaterScreen({
       <Chart period={period} goal={goal} onPeriod={onPeriod} />
       <button type="button" className="banner">
         <span className="banner-inner">
-          <img className="banner-drop" src={bannerDrop} width={15.0001} height={23.5} alt="" />
+          <Art markup={bannerDrop} className="banner-drop" />
           <span className="banner-text">Пейте воду — сохраняйте энергию!</span>
           <img className="banner-chevron" src={chevron} width={10.3732} height={17.435} alt="" />
         </span>
@@ -371,7 +356,7 @@ function ExtraPages({
       {tab === 'awards' &&
         awards.map((award) => (
           <article key={award.title} className="page-card award">
-            <img src={award.done ? dropRays : drop} width={20} height={award.done ? 32 : 33} alt="" />
+            <Art markup={award.done ? dropRays : drop} />
             <div>
               <strong>{award.title}</strong>
               <em>{award.done ? 'Получено' : 'Ещё впереди'}</em>
@@ -417,6 +402,7 @@ function App() {
   const [sheet, setSheet] = useState<Sheet>(null)
   const [custom, setCustom] = useState('300')
   const [goalDraft, setGoalDraft] = useState(String(initial.goal))
+  const [cheer, setCheer] = useState(0)
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ intake, goal, log }))
@@ -426,6 +412,7 @@ function App() {
     if (amount <= 0) return
     setIntake((current) => current + amount)
     setLog((items) => [...items, amount])
+    setCheer((count) => count + 1)
   }
 
   const undoWater = () => {
@@ -451,6 +438,7 @@ function App() {
                 intake={intake}
                 goal={goal}
                 period={period}
+                cheer={cheer}
                 onPeriod={setPeriod}
                 onAdd={addWater}
                 onUndo={undoWater}
@@ -477,7 +465,11 @@ function App() {
                   onClick={() => setTab(item.id)}
                 >
                   <span className={item.id === 'water' ? 'nav-icon water' : 'nav-icon'}>
-                    <img src={item.icon} width={item.width} height={item.height} alt="" />
+                    {item.id === 'water' ? (
+                      <Art markup={item.icon} />
+                    ) : (
+                      <img src={item.icon} width={item.width} height={item.height} alt="" />
+                    )}
                   </span>
                   {item.label}
                 </button>
@@ -486,9 +478,12 @@ function App() {
             <span className="home-indicator" />
           </nav>
           {sheet && (
-            <div className="sheet-backdrop" onClick={() => setSheet(null)}>
+            <div
+              className={sheet === 'custom' ? 'sheet-backdrop center' : 'sheet-backdrop'}
+              onClick={() => setSheet(null)}
+            >
               <form
-                className="sheet"
+                className={sheet === 'custom' ? 'sheet dialog' : 'sheet'}
                 onClick={(event) => event.stopPropagation()}
                 onSubmit={(event) => {
                   event.preventDefault()

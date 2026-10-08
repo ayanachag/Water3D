@@ -106,11 +106,64 @@
   inset: 0;
 }
 
+.art {
+  display: contents;
+}
+
 .bottle {
   position: absolute;
   top: 43px;
   left: 79px;
+  overflow: visible;
 }
+
+.water-level {
+  transition: transform 0.9s cubic-bezier(0.22, 0.82, 0.28, 1);
+}
+
+.wave-back {
+  animation: wave-drift 2.6s linear infinite;
+}
+
+.wave-front {
+  animation: wave-drift 1.7s linear infinite reverse;
+}
+
+.waves.splash {
+  transform-box: fill-box;
+  transform-origin: center top;
+  animation: splash-wave 0.7s ease-out;
+}
+
+.bubble {
+  fill: rgba(255, 255, 255, 0.82);
+  stroke: rgba(255, 255, 255, 0.95);
+  stroke-width: 0.45;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-name: bubble-rise;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
+}
+
+.sip {
+  display: block;
+  overflow: visible;
+}
+
+.sip-water {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.sip-a { animation: sip-bob 2.2s ease-in-out infinite; }
+.sip-b { animation: sip-bob 2.8s ease-in-out infinite; }
+.sip-c { animation: sip-bob 3.2s ease-in-out infinite; }
+
+.sip-a .sip-wave { animation: sip-wave 1.6s linear infinite; }
+.sip-b .sip-wave { animation: sip-wave 2.1s linear infinite; }
+.sip-c .sip-wave { animation: sip-wave 1.9s linear infinite reverse; }
 
 .total {
   position: absolute;
@@ -148,9 +201,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
+  gap: 8px;
+  padding: 10px 10px 8px;
   background: #e3f4ff;
+}
+
+.praise.shake {
+  animation: praise-wobble 0.62s ease-in-out;
 }
 
 .spark {
@@ -160,12 +217,20 @@
   transform: translateX(-50%);
 }
 
+.praise-title,
+.praise-sub {
+  width: 100%;
+  min-width: 0;
+  white-space: normal;
+  text-align: center;
+}
+
 .praise-title {
   margin: 0;
   color: #183a6c;
   font-size: 16px;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.15;
 }
 
 .praise-sub {
@@ -173,8 +238,7 @@
   color: #3772b2;
   font-size: 12px;
   font-weight: 400;
-  line-height: normal;
-  white-space: nowrap;
+  line-height: 1.25;
 }
 
 .stats {
@@ -289,7 +353,9 @@
   display: block;
   height: 8px;
   border-radius: 4px;
-  background: linear-gradient(90deg, #168bfa 0%, #39b9ff 55%, #0b86ea 100%);
+  background-image: linear-gradient(90deg, #0b86ea 0%, #39b9ff 35%, #168bfa 70%, #39b9ff 100%);
+  background-size: 220% 100%;
+  animation: gradient-flow 2.8s linear infinite;
 }
 
 .actions {
@@ -442,10 +508,6 @@
 .hline-mid { top: 101px; }
 .hline-bot { top: 151px; }
 
-.bar {
-  position: absolute;
-}
-
 .x-label {
   position: absolute;
   top: 163px;
@@ -460,7 +522,9 @@
   position: absolute;
   width: 16px;
   border-radius: 8px;
-  background: linear-gradient(180deg, #168bfa 0%, #39b9ff 55%, #0b86ea 100%);
+  background-image: linear-gradient(180deg, #0b86ea 0%, #39b9ff 40%, #168bfa 75%, #39b9ff 100%);
+  background-size: 100% 220%;
+  animation: gradient-flow-y 3.2s linear infinite;
 }
 
 .banner {
@@ -558,7 +622,8 @@
   justify-content: center;
 }
 
-.nav-btn:not(.active) .water img {
+.nav-btn:not(.active) .water img,
+.nav-btn:not(.active) .water svg {
   filter: grayscale(1) brightness(0.72);
 }
 
@@ -667,11 +732,34 @@
   z-index: 5;
 }
 
+.sheet-backdrop.center {
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
 .sheet {
   width: 100%;
   padding: 18px 20px 28px;
   border-radius: 16px 16px 0 0;
   background: #f8fcff;
+}
+
+.sheet.dialog {
+  width: 320px;
+  padding: 22px 20px 20px;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(16, 38, 83, 0.14);
+}
+
+.sheet.dialog .ghost,
+.sheet.dialog .primary {
+  background: #e4f1fb;
+  color: #17335d;
+}
+
+.sheet.dialog .primary {
+  background: #d6efff;
 }
 
 .sheet h2 {
@@ -682,6 +770,76 @@
 .sheet-actions {
   display: flex;
   gap: 10px;
+}
+
+.sheet.dialog .sheet-actions {
+  margin-top: 16px;
+}
+
+@keyframes wave-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-48px); }
+}
+
+@keyframes splash-wave {
+  0% { transform: scaleY(1); }
+  35% { transform: scaleY(1.7); }
+  100% { transform: scaleY(1); }
+}
+
+@keyframes bubble-rise {
+  0% { transform: translate(0, 104px) scale(0.45); opacity: 0; }
+  10% { opacity: 0.95; }
+  28% { transform: translate(var(--drift), 76px) scale(0.7); }
+  52% { transform: translate(calc(var(--drift) * -0.7), 46px) scale(0.9); }
+  76% { transform: translate(var(--drift), 18px) scale(1); opacity: 0.72; }
+  100% { transform: translate(calc(var(--drift) * 0.25), -4px) scale(1.12); opacity: 0; }
+}
+
+@keyframes sip-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-0.9px) rotate(-2.4deg); }
+}
+
+@keyframes sip-wave {
+  from { transform: translateX(0); }
+  to { transform: translateX(-14px); }
+}
+
+@keyframes gradient-flow {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+
+@keyframes gradient-flow-y {
+  from { background-position: 50% 0%; }
+  to { background-position: 50% 100%; }
+}
+
+@keyframes praise-wobble {
+  0% { transform: translateX(0); }
+  12% { transform: translateX(-7px); }
+  28% { transform: translateX(6px); }
+  44% { transform: translateX(-4px); }
+  62% { transform: translateX(3px); }
+  80% { transform: translateX(-1px); }
+  100% { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .water-level,
+  .wave-back,
+  .wave-front,
+  .waves.splash,
+  .bubble,
+  .sip-water,
+  .sip-wave,
+  .mini-fill,
+  .live-bar,
+  .praise.shake {
+    animation: none;
+    transition: none;
+  }
 }
 
 .sheet-actions .primary,

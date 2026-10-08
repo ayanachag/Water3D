@@ -8,6 +8,6 @@
 <stop stop-color="#128CF5"/>
 <stop offset="0.55" stop-color="#42C5FF"/>
 <stop offset="1" stop-color="#087DE2"/>
-</linearGradient>
+<animateTransform attributeName="gradientTransform" type="rotate" from="0 121 121" to="360 121 121" dur="9s" repeatCount="indefinite"/></linearGradient>
 </defs>
 </svg>
