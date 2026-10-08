@@ -115,6 +115,12 @@
   top: 43px;
   left: 79px;
   overflow: visible;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.bottle.wobble {
+  animation: bottle-wobble 0.55s ease;
 }
 
 .water-level {
@@ -215,7 +221,23 @@
   top: -6px;
   left: 50%;
   transform: translateX(-50%);
+  overflow: visible;
 }
+
+.ray {
+  stroke: #2eb6f6;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transform-box: fill-box;
+}
+
+.ray-left { transform-origin: 90% 100%; }
+.ray-mid { transform-origin: 50% 100%; }
+.ray-right { transform-origin: 10% 100%; }
+
+.praise.shake .ray-left { animation: ray-left 0.55s ease; }
+.praise.shake .ray-mid { animation: ray-mid 0.55s ease; }
+.praise.shake .ray-right { animation: ray-right 0.55s ease; }
 
 .praise-title,
 .praise-sub {
@@ -392,8 +414,14 @@
   gap: 10px;
 }
 
-.action:active .action-face {
-  transform: scale(0.96);
+.action.pop {
+  animation: action-grow 0.42s ease;
+}
+
+.action.pop .sip {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: sip-tilt 0.42s ease;
 }
 
 .chart {
@@ -428,6 +456,7 @@
   position: absolute;
   margin: 0;
   padding: 0;
+  background: none;
   color: #667c99;
   font-size: 12px;
   font-weight: 400;
@@ -592,7 +621,7 @@
   height: 48px;
 }
 
-.nav-btn {
+.phone .nav-btn {
   position: absolute;
   top: 0;
   display: flex;
@@ -602,7 +631,7 @@
   width: 76px;
   color: #607a9d;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 400;
   line-height: normal;
 }
 
@@ -611,8 +640,9 @@
 .nav-awards { left: 224px; }
 .nav-profile { left: 331px; }
 
-.nav-btn.active {
+.phone .nav-btn.active {
   color: #168eea;
+  font-weight: 700;
 }
 
 .nav-icon {
@@ -622,9 +652,9 @@
   justify-content: center;
 }
 
-.nav-btn:not(.active) .water img,
-.nav-btn:not(.active) .water svg {
-  filter: grayscale(1) brightness(0.72);
+.nav-icon svg {
+  display: block;
+  overflow: visible;
 }
 
 .home-indicator {
@@ -816,6 +846,46 @@
   to { background-position: 50% 100%; }
 }
 
+@keyframes ray-left {
+  0% { transform: translate(0, 0) scale(0.35); opacity: 0.25; }
+  50% { transform: translate(-3px, -4px) scale(1.2); opacity: 1; }
+  100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+
+@keyframes ray-mid {
+  0% { transform: translateY(0) scale(0.35); opacity: 0.25; }
+  50% { transform: translateY(-5px) scale(1.25); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes ray-right {
+  0% { transform: translate(0, 0) scale(0.35); opacity: 0.25; }
+  50% { transform: translate(3px, -4px) scale(1.2); opacity: 1; }
+  100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+
+@keyframes bottle-wobble {
+  0% { transform: translateX(0) rotate(0deg); }
+  14% { transform: translateX(-6px) rotate(-5deg); }
+  30% { transform: translateX(6px) rotate(5deg); }
+  46% { transform: translateX(-4px) rotate(-3deg); }
+  64% { transform: translateX(3px) rotate(2deg); }
+  82% { transform: translateX(-1px) rotate(-1deg); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+
+@keyframes action-grow {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+@keyframes sip-tilt {
+  0% { transform: rotate(0deg); }
+  40% { transform: rotate(16deg); }
+  100% { transform: rotate(0deg); }
+}
+
 @keyframes praise-wobble {
   0% { transform: translateX(0); }
   12% { transform: translateX(-7px); }
@@ -836,7 +906,11 @@
   .sip-wave,
   .mini-fill,
   .live-bar,
-  .praise.shake {
+  .praise.shake,
+  .action.pop,
+  .action.pop .sip,
+  .bottle.wobble,
+  .praise.shake .ray {
     animation: none;
     transition: none;
   }

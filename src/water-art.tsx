@@ -11,9 +11,7 @@ const BUBBLES = [
 ]
 
 const WAVE =
-  'M-48 32C-36 24-24 40-12 32C0 24 12 40 24 32C36 24 48 40 60 32C72 24 84 40 96 32C108 24 120 40 132 32C144 24 156 40 168 32V54H-48Z'
-
-const TRAVEL = 118
+  'M-48 0C-36 -8-24 8-12 0C0 -8 12 8 24 0C36 -8 48 8 60 0C72 -8 84 8 96 0C108 -8 120 8 132 0C144 -8 156 8 168 0V28H-48Z'
 
 export function Art({
   markup,
@@ -42,13 +40,13 @@ export function Art({
 
 export function Bottle({ ratio, splash }: { ratio: number; splash: number }) {
   const level = Math.max(0, Math.min(1, ratio))
-  const drop = (1 - level) * TRAVEL
+  const surface = 8 + (1 - level) * 140
 
   return (
     <svg className="bottle" width="96.9263" height="154" viewBox="0 0 96.9263 154" fill="none" aria-hidden="true">
       <defs>
         <clipPath id="wb-clip">
-          <path d="M54 24H25C13.2 24 4 33.7 4 46V128C4 140.2 13.4 150 25 150H54C65.6 150 75 140.2 75 128V46C75 33.7 65.8 24 54 24Z" />
+          <path d="M53.5 22H25.5C13 22 2.6 32.6 2.6 45V128.8C2.6 141.2 13 151.6 25.5 151.6H53.5C66 151.6 76.4 141.2 76.4 128.8V45C76.4 32.6 66 22 53.5 22Z" />
         </clipPath>
         <linearGradient id="wb-glass" x1="1" y1="21" x2="115.902" y2="88.0259" gradientUnits="userSpaceOnUse">
           <stop stopColor="white" stopOpacity="0.92" />
@@ -56,11 +54,9 @@ export function Bottle({ ratio, splash }: { ratio: number; splash: number }) {
           <stop offset="1" stopColor="#69CFFF" stopOpacity="0.82" />
           <animateTransform attributeName="gradientTransform" type="translate" values="0 0; -14 8; 0 0" dur="7s" repeatCount="indefinite" />
         </linearGradient>
-        <linearGradient id="wb-fill" x1="6" y1="20" x2="6" y2="150" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#8ADFFF" />
-          <stop offset="0.42" stopColor="#43C9FF" />
-          <stop offset="1" stopColor="#0C91E8" />
-          <animateTransform attributeName="gradientTransform" type="translate" values="0 0; 0 18; 0 0" dur="3.4s" repeatCount="indefinite" />
+        <linearGradient id="wb-fill" x1="40" y1="22" x2="40" y2="150" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#6ED4FF" />
+          <stop offset="1" stopColor="#2AA6EE" />
         </linearGradient>
         <linearGradient id="wb-strap" x1="78" y1="30" x2="100" y2="72.5" gradientUnits="userSpaceOnUse">
           <stop stopColor="#11409C" />
@@ -70,8 +66,8 @@ export function Bottle({ ratio, splash }: { ratio: number; splash: number }) {
       </defs>
       <path d="M54 21H25C11.7452 21 1 31.7452 1 45V129C1 142.255 11.7452 153 25 153H54C67.2548 153 78 142.255 78 129V45C78 31.7452 67.2548 21 54 21Z" fill="url(#wb-glass)" stroke="#30A9ED" strokeWidth="2" />
       <g clipPath="url(#wb-clip)">
-        <g className="water-level" style={{ transform: `translateY(${drop}px)` }}>
-          <rect x="0" y="34" width="96" height="130" fill="url(#wb-fill)" />
+        <g className="water-level" style={{ transform: `translateY(${surface}px)` }}>
+          <rect x="-8" y="0" width="120" height="190" fill="url(#wb-fill)" />
           <g className={splash > 0 ? 'waves splash' : 'waves'} key={splash}>
             <path className="wave wave-back" d={WAVE} fill="#7AD8FF" opacity="0.55" />
             <path className="wave wave-front" d={WAVE} fill="#E7F8FF" opacity="0.55" />
@@ -87,10 +83,10 @@ export function Bottle({ ratio, splash }: { ratio: number; splash: number }) {
                   ['--drift' as string]: bubble.drift,
                 }}
               >
-                <circle cx={bubble.cx} cy={34} r={bubble.r} />
+                <circle cx={bubble.cx} cy={8} r={bubble.r} />
                 <circle
                   cx={bubble.cx - bubble.r * 0.32}
-                  cy={34 - bubble.r * 0.35}
+                  cy={8 - bubble.r * 0.35}
                   r={bubble.r * 0.28}
                   fill="#ffffff"
                   stroke="none"
