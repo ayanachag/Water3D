@@ -548,7 +548,7 @@ function App() {
   }
 
   const undoWater = () => {
-    const last = log.at(-1) ?? 250
+    const last = log[log.length - 1] ?? 250
     setIntake((current) => Math.max(0, current - last))
     if (log.length > 0) setLog((items) => items.slice(0, -1))
   }
