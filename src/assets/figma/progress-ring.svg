@@ -1,0 +1,13 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="242" height="242" viewBox="0 0 242 242" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="progress-ring">
+<path id="Vector" d="M121 233C182.856 233 233 182.856 233 121C233 59.1441 182.856 9 121 9C59.1441 9 9 59.1441 9 121C9 182.856 59.1441 233 121 233Z" stroke="#E3F1FB" stroke-width="18" stroke-linecap="round"/>
+<path id="Vector_2" d="M121 9C182.856 9 233 59.1441 233 121C233 182.856 182.856 233 121 233" stroke="url(#paint0_linear_0_83)" stroke-width="18" stroke-linecap="round"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_83" x1="9" y1="233" x2="233" y2="9" gradientUnits="userSpaceOnUse">
+<stop stop-color="#128CF5"/>
+<stop offset="0.55" stop-color="#42C5FF"/>
+<stop offset="1" stop-color="#087DE2"/>
+</linearGradient>
+</defs>
+</svg>
