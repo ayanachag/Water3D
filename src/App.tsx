@@ -91,17 +91,9 @@ function NavIcon({ id, active }: { id: Tab; active: boolean }) {
         : id === 'awards'
           ? { width: 26, height: 26, viewBox: '0 0 26 26' }
           : { width: 22, height: 26, viewBox: '0 0 22 26' }
-  const glow =
-    id === 'water'
-      ? { x1: 4, y1: 2.6, x2: 19.2221, y2: 16.2253, dx: 10, dy: 6 }
-      : {
-          x1: box.width * 0.02,
-          y1: 0,
-          x2: box.width * 0.98,
-          y2: box.height * 0.92,
-          dx: box.width * 0.42,
-          dy: box.height * 0.22,
-        }
+  const sx = box.width / 16
+  const sy = box.height / 26
+  const glow = { x1: 4 * sx, y1: 2.6 * sy, x2: 19.2221 * sx, y2: 16.2253 * sy, dx: 10 * sx, dy: 6 * sy }
 
   return (
     <svg
@@ -594,7 +586,22 @@ function App() {
                   type="button"
                   className={tab === item.id ? `nav-btn nav-${item.id} active` : `nav-btn nav-${item.id}`}
                   aria-current={tab === item.id ? 'page' : undefined}
-                  onClick={() => setTab(item.id)}
+                  onClick={(event) => {
+                    if (tab !== item.id) {
+                      const icon = event.currentTarget.querySelector('.nav-icon')
+                      if (icon instanceof HTMLElement) {
+                        icon.classList.remove('pop')
+                        void icon.offsetWidth
+                        icon.classList.add('pop')
+                      }
+                    }
+                    setTab(item.id)
+                  }}
+                  onAnimationEnd={(event) => {
+                    if (event.animationName !== 'nav-grow') return
+                    const icon = event.currentTarget.querySelector('.nav-icon')
+                    if (icon instanceof HTMLElement) icon.classList.remove('pop')
+                  }}
                 >
                   <span className="nav-icon">
                     <NavIcon id={item.id} active={tab === item.id} />

@@ -566,6 +566,8 @@
   border-radius: 10px;
   background: #d6efff;
   text-align: left;
+  transform-origin: center center;
+  animation: banner-pulse 5.6s ease-in-out infinite;
 }
 
 .banner-inner {
@@ -650,6 +652,16 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  transform-origin: center bottom;
+  transition: transform 0.35s ease;
+}
+
+.phone .nav-btn.active .nav-icon {
+  transform: scale(1.08);
+}
+
+.nav-icon.pop {
+  animation: nav-grow 0.42s ease;
 }
 
 .nav-icon svg {
@@ -880,10 +892,22 @@
   100% { transform: scale(1); }
 }
 
+@keyframes nav-grow {
+  0% { transform: scale(1); }
+  42% { transform: scale(1.16); }
+  100% { transform: scale(1.08); }
+}
+
 @keyframes sip-tilt {
   0% { transform: rotate(0deg); }
   40% { transform: rotate(16deg); }
   100% { transform: rotate(0deg); }
+}
+
+@keyframes banner-pulse {
+  0%, 22% { transform: scale(1); }
+  46% { transform: scale(1.025); }
+  70%, 100% { transform: scale(1); }
 }
 
 @keyframes praise-wobble {
@@ -910,7 +934,10 @@
   .action.pop,
   .action.pop .sip,
   .bottle.wobble,
-  .praise.shake .ray {
+  .praise.shake .ray,
+  .nav-icon,
+  .nav-icon.pop,
+  .banner {
     animation: none;
     transition: none;
   }
